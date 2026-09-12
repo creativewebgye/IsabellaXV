@@ -526,114 +526,20 @@
       line-height: 1.6;
     }
 
-    /* Rosa decorativa */
+    /* Rosa elegante */
 
-    .rosa {
-      position: relative;
+.rosa{
+  position:relative;
+  width:190px;
+  margin:28px auto 14px;
+  filter: drop-shadow(0 14px 18px rgba(89,16,23,.22));
+}
 
-      width: 76px;
-      height: 95px;
-
-      margin: 31px auto 7px;
-    }
-
-    .rosa-flor {
-      position: absolute;
-      left: 50%;
-      top: 8px;
-
-      width: 46px;
-      height: 46px;
-
-      transform:
-        translateX(-50%)
-        rotate(45deg);
-
-      border-radius: 50% 50% 45% 50%;
-
-      background:
-        radial-gradient(
-          circle at 32% 30%,
-          #d9515c,
-          #961d2b 55%,
-          #650d17
-        );
-
-      box-shadow:
-        0 5px 14px rgba(91, 12, 20, 0.22);
-    }
-
-    .rosa-flor::before,
-    .rosa-flor::after {
-      content: "";
-
-      position: absolute;
-
-      border-radius: 50%;
-      background: inherit;
-    }
-
-    .rosa-flor::before {
-      width: 33px;
-      height: 33px;
-
-      left: -8px;
-      top: 12px;
-    }
-
-    .rosa-flor::after {
-      width: 32px;
-      height: 32px;
-
-      right: 10px;
-      top: -9px;
-    }
-
-    .tallo {
-      position: absolute;
-      left: 50%;
-      top: 48px;
-
-      width: 2px;
-      height: 48px;
-
-      transform: translateX(-50%);
-
-      background:
-        linear-gradient(
-          #557b3f,
-          #30502b
-        );
-    }
-
-    .tallo::before,
-    .tallo::after {
-      content: "";
-
-      position: absolute;
-
-      width: 23px;
-      height: 12px;
-
-      background: #557b3f;
-      border-radius: 100% 0 100% 0;
-    }
-
-    .tallo::before {
-      left: -22px;
-      top: 14px;
-
-      transform: rotate(20deg);
-    }
-
-    .tallo::after {
-      right: -22px;
-      top: 27px;
-
-      transform:
-        scaleX(-1)
-        rotate(20deg);
-    }
+.rosa img{
+  display:block;
+  width:100%;
+  height:auto;
+}
 
     /* ==========================================
        SECCIONES
@@ -1437,11 +1343,7 @@
         </p>
 
         <div class="rosa" aria-hidden="true">
-
-          <div class="rosa-flor"></div>
-
-          <div class="tallo"></div>
-
+          <img src="assets/rosa.png" alt="Rosa roja bajo cúpula de cristal" loading="lazy">
         </div>
 
         <p class="frase">
@@ -1685,11 +1587,11 @@
         </p>
 
         <div class="datos-cuenta">
-          <p><strong>Banco:</strong> Banco Guayaquil</p>
-          <p><strong>Tipo de cuenta:</strong> Corriente</p>
-          <p><strong>N.º de cuenta:</strong> 1492845</p>
-          <p><strong>A nombre de:</strong> Yonny Isabel Sedamanos Jiménez</p>
-          <p><strong>Cédula:</strong> 1102490560</p>
+          <p><strong>Banco:</strong> Banco Pichincha</p>
+          <p><strong>Tipo de cuenta:</strong> Ahorro</p>
+          <p><strong>N.º de cuenta:</strong> 2216213337</p>
+          <p><strong>A nombre de:</strong> Isabella Anchundia Sedamanos</p>
+          <p><strong>Cédula:</strong> 139503039</p>
         </div>
 
         <div class="separador-regalo">
@@ -1783,51 +1685,6 @@
               </select>
 
             </div>
-
-            <div class="campo">
-
-              <label for="cantidad">
-                Total de asistentes
-              </label>
-
-              <input
-                type="number"
-                id="cantidad"
-                min="1"
-                max="20"
-                step="1"
-                inputmode="numeric"
-                placeholder="Ejemplo: 3"
-                required
-              >
-
-            </div>
-
-          </div>
-
-          <div class="campo">
-
-            <label for="nombresAcompanantes">
-              Nombres de los acompañantes
-            </label>
-
-            <textarea
-              id="nombresAcompanantes"
-              placeholder="Ejemplo: María Pérez y Carlos Pérez"
-            ></textarea>
-
-          </div>
-
-          <div class="campo">
-
-            <label for="mensaje">
-              Mensaje para Isabella
-            </label>
-
-            <textarea
-              id="mensaje"
-              placeholder="Escribe un mensaje especial, opcional"
-            ></textarea>
 
           </div>
 
