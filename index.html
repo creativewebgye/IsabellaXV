@@ -1395,6 +1395,31 @@
       display: block;
     }
 
+    .mensaje-exito {
+      display: none;
+
+      margin-top: 17px;
+      padding: 12px;
+
+      border-left: 3px solid #2e7d32;
+
+      background: #f0fff2;
+      color: #2e7d32;
+
+      font-size: 0.8rem;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .mensaje-exito.visible {
+      display: block;
+    }
+
+    .boton:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     /* ==========================================
        PIE DE PÁGINA
     ========================================== */
@@ -2101,14 +2126,22 @@
           <button
             class="boton boton-whatsapp"
             type="submit"
+            id="botonConfirmar"
           >
-            Confirmar por WhatsApp
+            Confirmar asistencia
           </button>
 
           <p class="nota">
-            Al presionar el botón se abrirá WhatsApp con todos
-            los datos organizados para enviar la confirmación.
+            Al presionar el botón tu confirmación se guardará
+            automáticamente.
           </p>
+
+          <div
+            class="mensaje-exito"
+            id="mensajeExito"
+          >
+            ¡Gracias! Tu confirmación fue registrada con éxito.
+          </div>
 
         </form>
 
@@ -2269,19 +2302,17 @@
     );
 
     /* ==========================================
-       CONFIRMACIÓN POR WHATSAPP
+       CONFIRMACIÓN A GOOGLE SHEETS
 
-       Cambia el número de ejemplo por el número
-       que recibirá las confirmaciones.
+       Pega aquí la URL de tu Google Apps Script
+       publicado como Web App (termina en /exec).
 
-       Debe escribirse con código de país,
-       sin +, espacios ni guiones.
-
-       Ejemplo Ecuador:
-       593987654321
+       Instrucciones completas al final de este
+       mismo bloque de comentarios.
     ========================================== */
 
-    const numeroWhatsApp = "593986504857";
+    const urlGoogleSheets =
+      "https://script.google.com/macros/s/AKfycbxDlGdZfJ6dB_ay6jvtlbzEf79Yr1OKIcnSJECu6bhy-wP210KKITSK2J2ROE5-2zq1_A/exec";
 
     const formulario = document.getElementById(
       "formularioRSVP"
@@ -2291,41 +2322,16 @@
       "mensajeError"
     );
 
+    const mensajeExito = document.getElementById(
+      "mensajeExito"
+    );
+
+    const botonConfirmar = document.getElementById(
+      "botonConfirmar"
+    );
+
     const asistencia = document.getElementById(
       "asistencia"
-    );
-
-    const cantidad = document.getElementById(
-      "cantidad"
-    );
-
-    const acompanantes = document.getElementById(
-      "nombresAcompanantes"
-    );
-
-    asistencia.addEventListener(
-      "change",
-      function() {
-        if (
-          asistencia.value === "No podré asistir"
-        ) {
-          cantidad.value = "0";
-          cantidad.disabled = true;
-          cantidad.required = false;
-
-          acompanantes.value = "";
-          acompanantes.disabled = true;
-        } else {
-          cantidad.disabled = false;
-          cantidad.required = true;
-
-          acompanantes.disabled = false;
-
-          if (cantidad.value === "0") {
-            cantidad.value = "";
-          }
-        }
-      }
     );
 
     formulario.addEventListener(
@@ -2341,46 +2347,9 @@
         const respuestaAsistencia =
           asistencia.value;
 
-        let totalAsistentes =
-          cantidad.value;
-
-        const nombresAcompanantes =
-          acompanantes.value.trim();
-
-        const mensajeEspecial = document
-          .getElementById("mensaje")
-          .value
-          .trim();
-
-        if (
-          respuestaAsistencia === "Sí asistiré"
-        ) {
-          const cantidadNumerica =
-            Number(totalAsistentes);
-
-          if (
-            !Number.isInteger(cantidadNumerica) ||
-            cantidadNumerica < 1 ||
-            cantidadNumerica > 20
-          ) {
-            mensajeError.textContent =
-              "Escribe un número válido de asistentes entre 1 y 20.";
-
-            mensajeError.classList.add("visible");
-
-            cantidad.focus();
-
-            return;
-          }
-        }
-
         if (
           !nombre ||
-          !respuestaAsistencia ||
-          (
-            respuestaAsistencia === "Sí asistiré" &&
-            !totalAsistentes
-          )
+          !respuestaAsistencia
         ) {
           mensajeError.textContent =
             "Revisa los datos obligatorios antes de enviar la confirmación.";
@@ -2391,56 +2360,37 @@
         }
 
         mensajeError.classList.remove("visible");
+        mensajeExito.classList.remove("visible");
 
-        if (
-          respuestaAsistencia === "No podré asistir"
-        ) {
-          totalAsistentes = "0";
-        }
+        botonConfirmar.disabled = true;
+        botonConfirmar.textContent = "Enviando...";
 
-        const textoWhatsApp =
-`*CONFIRMACIÓN DE ASISTENCIA - MIS XV*
+        const datos = new URLSearchParams();
+        datos.append("nombre", nombre);
+        datos.append("asistencia", respuestaAsistencia);
 
-*Quinceañera:*
-Isabella Sofía Anchundia Sedamanos
+        fetch(urlGoogleSheets, {
+          method: "POST",
+          mode: "no-cors",
+          body: datos
+        })
+          .then(function() {
+            mensajeExito.classList.add("visible");
 
-*Fecha:*
-Sábado 30 de enero de 2027
+            formulario.reset();
 
-*Hora:*
-19h00
+            botonConfirmar.disabled = false;
+            botonConfirmar.textContent = "Confirmar asistencia";
+          })
+          .catch(function() {
+            mensajeError.textContent =
+              "No se pudo enviar la confirmación. Intenta de nuevo.";
 
-*Lugar:*
-Casa Club, Urbanización Narcisa Club
+            mensajeError.classList.add("visible");
 
-*Nombre del invitado:*
-${nombre}
-
-*Confirmación:*
-${respuestaAsistencia}
-
-*Total de asistentes:*
-${totalAsistentes}
-
-*Nombres de los acompañantes:*
-${nombresAcompanantes || "No especificados"}
-
-*Mensaje para Isabella:*
-${mensajeEspecial || "Sin mensaje adicional"}
-
-Confirmación enviada desde la invitación digital.`;
-
-        const urlWhatsApp = 593986504857
-          "https://wa.me/" +
-          numeroWhatsApp +
-          "?text=" +
-          encodeURIComponent(textoWhatsApp);
-
-        window.open(
-          urlWhatsApp,
-          "_blank",
-          "noopener,noreferrer"
-        );
+            botonConfirmar.disabled = false;
+            botonConfirmar.textContent = "Confirmar asistencia";
+          });
       }
     );
   </script>
